@@ -1,8 +1,11 @@
-import React from 'react';
+import React, {Suspense} from 'react';
+import { Router, Switch } from 'react-router-dom';
+import AppBar from './appBar/AppBar';
 
 const App = () => {
     return (
-        <h2>Hello</h2>
+        <AppBar />
+        // <Suspense fallback={<h1>Загружаем...</h1>}></Suspense>
     );
 }
 
