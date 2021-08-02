@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ReviewsStyled from "../styles/ReviewsStyled";
 import { getMovieReviews } from "../services/Api";
+import Loader from "react-loader-spinner";
 
 class Reviews extends Component {
   state = {
@@ -8,14 +9,21 @@ class Reviews extends Component {
   };
   async componentDidMount() {
     const id = this.props.match.params.id || "";
+    this.setState({ isLoading: true });
+
     await getMovieReviews(id)
       .then((results) => this.setState({ reviews: results }))
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error))
+      .finally(() => {
+        this.setState({ isLoading: false });
+      });
   }
+
   render() {
-    const { reviews } = this.state;
+    const { reviews, isLoading } = this.state;
    
     return (
+      <>
       <ReviewsStyled>
         {reviews.length > 1 ? (
           <ul className="reviewList">
@@ -30,6 +38,14 @@ class Reviews extends Component {
           <h2 className="notFound">We don't have any reviews for this movie</h2>
         )}
       </ReviewsStyled>
+      {isLoading && <Loader
+        type="ThreeDots"
+        color="#00BFFF"
+        height={80}
+        width={80}
+        timeout={3000} //3 secs
+      />}
+      </>
     );
   }
 }

@@ -1,43 +1,76 @@
 import React, { Component } from "react";
-import MoviesPageStyled from "../styles/MoviesPageStyled";
+import Searchbar from "../component/searchbar/Searchbar";
+import MoviesList from "../component/moviesList/MoviesList";
+import Loader from "react-loader-spinner";
+import { getMovieByQuery } from "../services/Api";
+import queryString from "query-string";
 
 class MoviesPage extends Component {
   state = {
     query: "",
     page: 1,
     newMovies: [],
+    isLoading: false,
   };
 
-  handleChange = (e) => {
-    this.setState({ query: e.currentTarget.value });
+  componentDidMount() {
+    const {location} = this.props;
+    const { query } = queryString.parse(location.search);
+
+    if (query) {
+      this.setState({
+        query: query,
+        newMovies: [],
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.query !== this.state.query) {
+      this.searchMovies();
+    }
+  }
+
+  handleChange = (query) => {
+    this.setState({ query: query, newMovies: [] });
+    this.props.history.push({ search: `query=${query}`})
   };
 
-  handleSubmit = (e) => {
-    e.preventDefault();
+  searchMovies = async () => {
+    const {query} = this.state;
+    this.setState({ isLoading: true });
+    console.log("query");
+    await getMovieByQuery(query)
+    .then((response) => 
+    this.setState({ newMovies: response, }))
+    .catch((error) => console.log(error))
+    .finally(() => {
+      this.setState({ isLoading: false});
+    });
 
-    this.props.onSubmit(this.state.query);
-    this.setState({ query: "" });
   };
 
   render() {
+    const { newMovies,isLoading } = this.state;
     return (
-      <MoviesPageStyled className="Searchbar">
-        <form className="SearchForm" onSubmit={this.handleSubmit}>
-          <button type="submit" className="SearchForm-button">
-            <span className="SearchForm-button-label">Search</span>
-          </button>
-
-          <input
-            className="SearchForm-input"
-            type="text"
-            value={this.state.query}
-            onChange={this.handleChange}
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-          />
-        </form>
-      </MoviesPageStyled>
+      <>
+       <div className="moviesWrapper">
+          <Searchbar onSubmit={this.handleChange} />
+          {newMovies.length > 0 && (
+            <MoviesList
+            newMovies={newMovies}
+              location={this.props.location}
+            />
+          )}
+        </div>
+        {isLoading && <Loader
+        type="ThreeDots"
+        color="#00BFFF"
+        height={80}
+        width={80}
+        timeout={3000} //3 secs
+      />}
+      </>
     );
   }
 }

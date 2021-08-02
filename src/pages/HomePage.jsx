@@ -2,20 +2,26 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import HomePageStyled from "../styles/HomePageStyled";
 import { trendingMovies } from "../services/Api";
+import Loader from "react-loader-spinner";
 
 class HomePage extends Component {
   state = {
     movies: [],
+    isLoading: false,
   };
 
   async componentDidMount() {
+    this.setState({ isLoading: true });
     await trendingMovies()
       .then((results) => this.setState({ movies: results }))
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error))
+      .finally(() => {
+        this.setState({ isLoading: false });
+      });
   }
 
   render() {
-    const { movies } = this.state;
+    const { movies, isLoading } = this.state;
     
     return (
       <div className="container">
@@ -45,6 +51,13 @@ class HomePage extends Component {
               ))}
           </ul>
         </HomePageStyled>
+        {isLoading && <Loader
+        type="ThreeDots"
+        color="#00BFFF"
+        height={80}
+        width={80}
+        timeout={3000} //3 secs
+      />}
       </div>
     );
   }

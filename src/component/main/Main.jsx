@@ -8,7 +8,7 @@ const Main = () => {
     <main>
       <Suspense
         fallback={
-          <Loader type="ThreeDots" color="#00BFFF" height={80} width={80} />
+          <Loader type="ThreeDots" color="#00BFFF" height={100} width={100} />
         }
       >
         <Switch>
@@ -17,7 +17,7 @@ const Main = () => {
               path={route.path}
               component={route.component}
               exact={route.exact}
-              key={route.path}
+              key={route.name}
             />
           ))}
         </Switch>

@@ -4,15 +4,18 @@ import { searchMovies } from "../services/Api";
 import MovieDetailsPageStyled from "../styles/MovieDetailsPageStyled";
 import Reviews from "../pages/Reviews";
 import Cast from "./Cast";
+import Loader from "react-loader-spinner";
 
 class MovieDetailsPage extends Component {
   state = {
     moviesDetails: {},
     from: "",
+    isLoading: false,
   };
 
   async componentDidMount() {
     const id = this.props.match.params.id || "";
+    this.setState({ isLoading: true });
     await searchMovies(id)
       .then((results) =>
         this.setState({
@@ -20,11 +23,14 @@ class MovieDetailsPage extends Component {
           from: this.props.location.state.from,
         })
       )
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error))
+      .finally(() => {
+        this.setState({ isLoading: false });
+      });
   }
 
   render() {
-    const { moviesDetails } = this.state;
+    const { moviesDetails, isLoading } = this.state;
     const id = this.props.match.params.id || "";
 
     return (
@@ -82,7 +88,15 @@ class MovieDetailsPage extends Component {
         ) : (
           <h2 className="notFound">Page not found </h2>
         )}
+        {isLoading && <Loader
+        type="ThreeDots"
+        color="#00BFFF"
+        height={80}
+        width={80}
+        timeout={3000} //3 secs
+      />}
       </div>
+
     );
   }
 }
