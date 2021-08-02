@@ -39,7 +39,7 @@ class MoviesPage extends Component {
   searchMovies = async () => {
     const {query} = this.state;
     this.setState({ isLoading: true });
-    console.log("query");
+    
     await getMovieByQuery(query)
     .then((response) => 
     this.setState({ newMovies: response, }))
