@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { getMovieCast } from "../services/Api";
-import CastStyled from "../styles/CastStyled";
-import defaultImg from "../images/unnamed.jpg";
+import { getMovieCast } from "../../services/Api";
+import CastStyled from "./CastStyled";
+import defaultImg from "../../images/unnamed.jpg";
 import Loader from "react-loader-spinner";
 
 class Cast extends Component {
@@ -29,7 +29,7 @@ class Cast extends Component {
       <CastStyled>
         {castData.id ? (
           <ul className="castList">
-            {castData.cast.map(({ id, profile_path, name }) => (
+            {castData?.cast.map(({ id, profile_path, name }) => (
               <li className="castItem" key={id}>
                 <img
                   className="castImg"
@@ -44,9 +44,9 @@ class Cast extends Component {
               </li>
             ))}
           </ul>
-        ) : (
+         ) : (
           <h2 className="notFound">Page not found </h2>
-        )}
+        )} 
       </CastStyled>
       {isLoading && <Loader
         type="ThreeDots"

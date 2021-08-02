@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import ReviewsStyled from "../styles/ReviewsStyled";
-import { getMovieReviews } from "../services/Api";
+import ReviewsStyled from "./ReviewsStyled";
+import { getMovieReviews } from "../../services/Api";
 import Loader from "react-loader-spinner";
 
 class Reviews extends Component {

@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { Link, Route, Switch } from "react-router-dom";
 import { searchMovies } from "../services/Api";
 import MovieDetailsPageStyled from "../styles/MovieDetailsPageStyled";
-import Reviews from "../pages/Reviews";
-import Cast from "./Cast";
+import Reviews from "../component/reviews/Reviews";
+import Cast from "../component/cast/Cast";
 import Loader from "react-loader-spinner";
 
 class MovieDetailsPage extends Component {
@@ -35,6 +35,8 @@ class MovieDetailsPage extends Component {
 
     return (
       <div className="container">
+         {moviesDetails.id && (
+           <MovieDetailsPageStyled>
         <button
           className="BackBtn"
           type="button"
@@ -42,8 +44,7 @@ class MovieDetailsPage extends Component {
         >
           Go back
         </button>
-        {moviesDetails.id ? (
-          <MovieDetailsPageStyled>
+        
             <div className="wrapper">
               <img
                 src={
@@ -84,10 +85,8 @@ class MovieDetailsPage extends Component {
                 <Route path="/movies/:id/cast" exact component={Cast} />
               </Switch>
             </div>
-          </MovieDetailsPageStyled>
-        ) : (
-          <h2 className="notFound">Page not found </h2>
-        )}
+          </MovieDetailsPageStyled> 
+         )}
         {isLoading && <Loader
         type="ThreeDots"
         color="#00BFFF"
